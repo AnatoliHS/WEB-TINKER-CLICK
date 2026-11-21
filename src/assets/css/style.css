@@ -784,7 +784,7 @@ html.has-intro .hero-grid {
    ========================================================================== */
 .stage {
   position: relative;
-  height: 420vh;
+  height: 500vh;
   /* The next section rises in while the orb's particles are still flying apart */
   margin-bottom: -50vh;
 }
@@ -832,8 +832,8 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   .stage-sphere {
     /* Clearly narrower than the words, so the lens doesn't stretch across the whole line */
     --sphere-size: min(58vw, 240px, 30svh);
-    height: 300vh;
-    height: 300svh;
+    height: 350vh;
+    height: 350svh;
     margin-bottom: -40svh;
     /* Start a little higher, so the stage pins as the last of the hero text slides under the header */
     margin-top: -96px;
@@ -1358,19 +1358,20 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 .fv-opts { display: grid; gap: 8px; width: min(260px, 100%); font-size: 0.875rem; color: var(--ink); }
-.fv-opts span { display: flex; gap: 10px; align-items: center; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); animation: fv-pick 4.5s infinite; }
-.fv-opts span::before { content: ""; width: 12px; height: 12px; border: 1.5px solid var(--muted); border-radius: 50%; animation: fv-dot 4.5s infinite; animation-delay: inherit; }
+.fv-opts span { display: flex; gap: 10px; align-items: center; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); animation: fv-pick 6s infinite; }
+.fv-opts span::before { content: ""; width: 12px; height: 12px; border: 1.5px solid var(--muted); border-radius: 50%; animation: fv-dot 6s infinite; animation-delay: inherit; }
 .fv-opts span:nth-child(2) { animation-delay: 1.5s; }
 .fv-opts span:nth-child(3) { animation-delay: 3s; }
+.fv-opts span:nth-child(4) { animation-delay: 4.5s; }
 
 @keyframes fv-pick {
-  0%, 30% { border-color: var(--f); }
-  34%, 100% { border-color: var(--line); }
+  0%, 22.5% { border-color: var(--f); }
+  25.5%, 100% { border-color: var(--line); }
 }
 
 @keyframes fv-dot {
-  0%, 30% { border-color: var(--f); background: radial-gradient(var(--f) 45%, transparent 50%); }
-  34%, 100% { border-color: var(--muted); background: none; }
+  0%, 22.5% { border-color: var(--f); background: radial-gradient(var(--f) 45%, transparent 50%); }
+  25.5%, 100% { border-color: var(--muted); background: none; }
 }
 
 .fv-files { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 280px; }
@@ -1398,8 +1399,8 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 @keyframes fv-in { from { transform: translateY(100%); } }
 @keyframes fv-out { to { transform: translateY(-100%); } }
 
-/* Live interface (Meet Tinker): a small app (Cat & Fish) that is described, built, translated and
-   shared. .live carries the step (data-step 0–3) and --c, that step's colour. The stage is a size
+/* Live interface (Meet Tinker): a small app (Cat & Fish) that is described, built, shared and
+   translated. .live carries the step (data-step 0–3) and --c, that step's colour. The stage is a size
    container: --u is 1% of the app's width, so the app scales as one piece, and --ch is its height in
    --u; --k scales its type up on phones */
 .live { position: relative; --c: var(--node-1); }
@@ -1467,7 +1468,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   translate: -50% 0;
 }
 
-.live[data-step="3"] .ui-card { scale: 0.7; translate: -50% -56%; }
+.live[data-step="2"] .ui-card { scale: 0.7; translate: -50% -56%; }
 
 .ui-body {
   position: absolute;
@@ -1677,7 +1678,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   background-color: transparent;
 }
 
-.live[data-step="3"] .ui-prompt { opacity: 0; translate: 0 calc(var(--u) * 4); }
+.live[data-step="2"] .ui-prompt { opacity: 0; translate: 0 calc(var(--u) * 4); }
 
 .ui-prompt > svg,
 .ui-share > svg {
@@ -1743,11 +1744,11 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   transition: opacity 0.4s ease, translate 0.6s var(--ease);
 }
 
-.live[data-step="3"] .ui-share { opacity: 1; translate: 0 0; transition-delay: 0.35s; }
+.live[data-step="2"] .ui-share { opacity: 1; translate: 0 0; transition-delay: 0.35s; }
 .ui-likes { display: inline-flex; gap: 0.3em; margin-left: auto; color: #f2541b; font-weight: 600; }
 .ui-likes > span { display: inline-grid; font-variant-numeric: tabular-nums; }
 
-/* Two other people's apps, fanned out behind on step 4 */
+/* Two other people's apps, fanned out behind on step 3 */
 .ui-ghost {
   position: absolute;
   z-index: 1;
@@ -1776,9 +1777,9 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 .ui-ghost i:nth-child(2) { --t: #0f9f72; }
 .ui-ghost i:nth-child(3) { --t: #2b4dff; }
 .ui-ghost i:nth-child(4) { --t: #f2541b; }
-.live[data-step="3"] .ui-ghost { opacity: 1; scale: 0.64; }
-.live[data-step="3"] .ui-ghost-l { translate: calc(-50% - var(--u) * 24) -53%; rotate: -9deg; transition-delay: 0.15s; }
-.live[data-step="3"] .ui-ghost-r { translate: calc(-50% + var(--u) * 24) -53%; rotate: 9deg; transition-delay: 0.25s; }
+.live[data-step="2"] .ui-ghost { opacity: 1; scale: 0.64; }
+.live[data-step="2"] .ui-ghost-l { translate: calc(-50% - var(--u) * 24) -53%; rotate: -9deg; transition-delay: 0.15s; }
+.live[data-step="2"] .ui-ghost-r { translate: calc(-50% + var(--u) * 24) -53%; rotate: 9deg; transition-delay: 0.25s; }
 
 /* Step 1: suggestions under the pill */
 .ui-chips {
@@ -1839,8 +1840,8 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 .ui-w.is-in { animation: ui-in 1ms both; animation-delay: calc(0.45s + var(--i, 0) * 0.08s); }
 .ui-w.is-out { animation: ui-out 1ms both; animation-delay: calc(0.45s + var(--i, 0) * 0.08s); }
 .live.go[data-step="1"] .ui-w.is-in { animation-delay: 0.3s; }
-.live[data-step="2"] .ui-w.is-in { animation: ui-roll-in 0.8s var(--ease) both; animation-delay: calc(0.15s + var(--j, 0) * 55ms); }
-.live[data-step="2"] .ui-w.is-out { animation: ui-roll-out 0.55s var(--ease-in-out) both; animation-delay: calc(var(--j, 0) * 55ms); }
+.live[data-step="3"] .ui-w.is-in { animation: ui-roll-in 0.8s var(--ease) both; animation-delay: calc(0.15s + var(--j, 0) * 55ms); }
+.live[data-step="3"] .ui-w.is-out { animation: ui-roll-out 0.55s var(--ease-in-out) both; animation-delay: calc(var(--j, 0) * 55ms); }
 
 @keyframes ui-in { from { opacity: 0; } }
 @keyframes ui-out { to { opacity: 0; } }
@@ -2145,7 +2146,36 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   margin-top: clamp(12px, 1.4vh, 18px);
 }
 
-.faq-answer a {
+/* The licence in 170 words (component/licence-summary.html), in the FAQ and on /licence/ */
+.licence-summary {
+  margin: clamp(12px, 1.4vh, 18px) 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--line);
+  color: var(--ink-2);
+}
+
+.licence-summary p + p {
+  margin-top: 10px;
+}
+
+/* The full AGPL on /licence/: the FSF's plain text, wrapped on narrow screens */
+.licence-full {
+  margin-top: 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.policy-card .licence-summary a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.faq-answer a,
+.feature-copy a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -2242,10 +2272,12 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 .footer-legal a:hover,
+.footer-copy a:hover,
 .footer-credit a:hover {
   color: var(--accent);
 }
 
+.footer-copy a,
 .footer-credit a {
   color: var(--ink-2);
 }
@@ -2282,8 +2314,26 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   height: var(--header-h);
 }
 
-.brand-logo {
-  width: 104px;
+/* The mark and the wordmark, as the main header shows them once the brand docks */
+.policy-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.policy-wordmark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.policy-wordmark .click-word {
+  font-size: 0.6em;
+  letter-spacing: 0.02em;
+  color: var(--accent);
 }
 
 .back-link {

@@ -16,8 +16,8 @@ title: Terms of Service — Tinker Click
     </div>
 
     <div class="policy-card">
-      <h2>2. Alpha & Waitlist Program</h2>
-      <p>Tinker Click is currently in private Alpha development. By joining our waitlist or reserving a pre-order tier, you understand that features, release schedules, and preview interfaces are subject to iterative refinements based on community feedback and developmental velocity.</p>
+      <h2>2. Early Access & Waitlist Program</h2>
+      <p>Tinker Click is currently in early access. By joining our waitlist or reserving a pre-order tier, you understand that features, release schedules, and preview interfaces are subject to iterative refinements based on community feedback and developmental velocity.</p>
     </div>
 
     <div class="policy-card">

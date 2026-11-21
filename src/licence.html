@@ -1,0 +1,38 @@
+---
+layout: policy.njk
+title: Licence — Tinker Click
+description: "Tinker Click's licence, the GNU Affero General Public License version 3: in 170 plain words, then in full."
+---
+
+<section class="policy-section">
+  <div class="policy-header">
+    <h1>Licence</h1>
+    <p class="policy-meta">Tinker Click is licensed under the GNU Affero General Public License, version 3</p>
+  </div>
+
+  <div class="policy-body">
+    <div class="policy-card">
+      <h2>The licence in 170 words</h2>
+      <p>The MIT licence is 170 words. It fits on a business card. It gives everything away.</p>
+      <p>The AGPL is about 5,500 words. Almost nobody reads it. So here it is in our 170 words for you to read, share, and use:</p>
+      {% include "component/licence-summary.html" %}
+      <p><a href="#full">The full licence</a> follows below.</p>
+    </div>
+
+    <div class="policy-card">
+      <h2 id="authors">The Tinker Click Authors</h2>
+      <p>The copyright line names the people and companies who contribute to the official Tinker Click projects: the app, this site and its design. Each one adds their name in the same change as their first contribution.</p>
+      <ul>
+        {%- for author in authors %}
+        <li>{{ author }}</li>
+        {%- endfor %}
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2 id="full">The full licence</h2>
+      <p>The GNU Affero General Public License, version 3, word for word as the Free Software Foundation publishes it at <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">gnu.org</a>.</p>
+      <pre class="licence-full">{{ agpl | escape }}</pre>
+    </div>
+  </div>
+</section>

@@ -11,11 +11,11 @@ intro: true
      ======================================================== -->
 {% include "component/hero.njk" %}
 
-<section class="stage stage-sphere" data-stage data-compact-below="760" aria-label="Make it. Use it. Share it.">
+<section class="stage stage-sphere" data-stage data-compact-below="760" aria-label="Make it. Use it. Share it. Remix it.">
   <div class="stage-pin">
     <div class="container stage-inner">
       <!-- The words are drawn on the canvas with the orb (assets/js/sphere.js); this is their text -->
-      <h2 class="sr-only">Make it. Use it. Share it.</h2>
+      <h2 class="sr-only">Make it. Use it. Share it. Remix it.</h2>
       <div class="sphere-target" data-stage-target></div>
     </div>
     <!-- Phones: the orb is drawn here while it moves with the page (assets/js/sphere.js) -->
@@ -36,8 +36,8 @@ intro: true
       <p class="section-lede">Think of it as a music library for apps, where you can add your own tracks. From a game of Go to a working copy of Winamp, the apps people make in Tinker Click run right inside it.</p>
     </div>
 
-    <!-- Live interface: a small app that is described, built, translated and shared, Describe → Build →
-         Remix → Share. It plays through the steps on its own once the orb's halo has gathered above the
+    <!-- Live interface: a small app that is described, built, shared and translated, Describe → Build →
+         Share → Remix. It plays through the steps on its own once the orb's halo has gathered above the
          prompt; the steps below jump to theirs. Text that changes per step is in data-t (step 1|2|3|4),
          numbers in data-n count up from the step in data-at (scripts.njk). -->
     <div class="live reveal" data-live data-step="0">
@@ -48,24 +48,24 @@ intro: true
           <div class="ui-body">
             <div class="ui-head ui-b" style="--i: 0">
               <div>
-                <span class="ui-eyebrow" data-t="|Your app · Draft|Remix · Deutsch|Published"></span>
-                <span class="ui-title" data-t="|Cat &amp; Fish|Katze &amp; Fisch|Katze &amp; Fisch"></span>
+                <span class="ui-eyebrow" data-t="|Your app · Draft|Published|Remix · Deutsch"></span>
+                <span class="ui-title" data-t="|Cat &amp; Fish|Cat &amp; Fish|Katze &amp; Fisch"></span>
               </div>
-              <span class="ui-badge" data-t="||DE|✓ Public"></span>
+              <span class="ui-badge" data-t="||✓ Public|DE"></span>
             </div>
             <div class="ui-seg ui-b" style="--i: 1">
-              <span class="is-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 5.5l11 6.5-11 6.5z"/></svg><span data-t="|Play|Spielen|Spielen"></span></span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM12 13v4M8.5 20h7M16 5.5h3a3 3 0 0 1-3 3.5M8 5.5H5a3 3 0 0 0 3 3.5"/></svg><span data-t="|Scores|Rangliste|Rangliste"></span></span>
+              <span class="is-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 5.5l11 6.5-11 6.5z"/></svg><span data-t="|Play|Play|Spielen"></span></span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM12 13v4M8.5 20h7M16 5.5h3a3 3 0 0 1-3 3.5M8 5.5H5a3 3 0 0 0 3 3.5"/></svg><span data-t="|Scores|Scores|Rangliste"></span></span>
             </div>
             <div class="ui-grid">
-              <div class="ui-tile ui-b" style="--i: 2; --v: 0.62"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12c3.2-5.2 9.3-6 13.6-1.6L20.5 7v10l-4.4-3.4C11.8 18 5.7 17.2 2.5 12z"/><circle cx="7.5" cy="11" r=".9" fill="currentColor" stroke="none"/></svg><span class="ui-label" data-t="|Score|Punkte|Punkte"></span><span class="ui-value" data-n="1240"></span><span class="ui-bar"><i></i></span></div>
-              <div class="ui-tile ui-b" style="--i: 3; --v: 0.38"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6-4.3-4.2 6-.9z"/></svg><span class="ui-label" data-t="|Level|Stufe|Stufe"></span><span class="ui-value" data-t="|3 of 8|3 von 8|3 von 8"></span><span class="ui-bar"><i></i></span></div>
-              <div class="ui-tile ui-b" style="--i: 4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></svg><span class="ui-label" data-t="|Lives|Leben|Leben"></span><span class="ui-value" data-t="|3 left|Noch 3|Noch 3"></span></div>
-              <div class="ui-tile ui-b" style="--i: 5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17.5V5.5l11-2.2v11.8"/><circle cx="6.2" cy="17.6" r="2.8"/><circle cx="17.2" cy="15.2" r="2.8"/></svg><span class="ui-label" data-t="|Sound|Ton|Ton"></span><span class="ui-value" data-t="|On|An|An"></span></div>
+              <div class="ui-tile ui-b" style="--i: 2; --v: 0.62"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12c3.2-5.2 9.3-6 13.6-1.6L20.5 7v10l-4.4-3.4C11.8 18 5.7 17.2 2.5 12z"/><circle cx="7.5" cy="11" r=".9" fill="currentColor" stroke="none"/></svg><span class="ui-label" data-t="|Score|Score|Punkte"></span><span class="ui-value" data-n="1240"></span><span class="ui-bar"><i></i></span></div>
+              <div class="ui-tile ui-b" style="--i: 3; --v: 0.38"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6-4.3-4.2 6-.9z"/></svg><span class="ui-label" data-t="|Level|Level|Stufe"></span><span class="ui-value" data-t="|3 of 8|3 of 8|3 von 8"></span><span class="ui-bar"><i></i></span></div>
+              <div class="ui-tile ui-b" style="--i: 4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></svg><span class="ui-label" data-t="|Lives|Lives|Leben"></span><span class="ui-value" data-t="|3 left|3 left|Noch 3"></span></div>
+              <div class="ui-tile ui-b" style="--i: 5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17.5V5.5l11-2.2v11.8"/><circle cx="6.2" cy="17.6" r="2.8"/><circle cx="17.2" cy="15.2" r="2.8"/></svg><span class="ui-label" data-t="|Sound|Sound|Ton"></span><span class="ui-value" data-t="|On|On|An"></span></div>
             </div>
           </div>
           <div class="ui-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.6 4.7 3.3 7.4 8 8-4.7.6-7.4 3.3-8 8-.6-4.7-3.3-7.4-8-8 4.7-.6 7.4-3.3 8-8z"/></svg><span data-ui="promptText"></span><span class="ui-caret"></span><span class="ui-send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg></span></div>
-          <div class="ui-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>tinker.click/katze-fisch</span><span class="ui-likes">♥ <span data-n="128" data-at="3"></span></span></div>
+          <div class="ui-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>tinker.click/cat-fish</span><span class="ui-likes">♥ <span data-n="128" data-at="2"></span></span></div>
         </div>
         <div class="ui-chips"><span>Snake, but with cats</span><span>A pocket-money tracker</span><span>Spanish flashcards</span></div>
         <!-- Where the orb's particles gather back into the halo, above the prompt (assets/js/sphere.js) -->
@@ -87,7 +87,7 @@ intro: true
         <li>
           <button type="button" class="live-step" data-live-step style="--node: var(--node-2)">
             <span class="index-num">02</span>
-            <h3>Watch it <span class="text-orange">build</span></h3>
+            <h3>Tinker <span class="text-orange">builds it</span></h3>
             <p>Tinker Click assembles a working app around your idea, ready to use right on your desktop.</p>
             <span class="live-timer"><i></i></span>
           </button>
@@ -95,16 +95,16 @@ intro: true
         <li>
           <button type="button" class="live-step" data-live-step style="--node: var(--node-3)">
             <span class="index-num">03</span>
-            <h3>Remix <span class="text-orange">anything</span></h3>
-            <p>Open someone's app to get your own copy, then change it however you like, even translate it into your language.</p>
+            <h3>Share <span class="text-orange">when you’re ready</span></h3>
+            <p>Your apps stay private until you decide otherwise. When you're proud of something, share it with the world in one step.</p>
             <span class="live-timer"><i></i></span>
           </button>
         </li>
         <li>
           <button type="button" class="live-step" data-live-step style="--node: var(--node-4)">
             <span class="index-num">04</span>
-            <h3>Share <span class="text-orange">when you’re ready</span></h3>
-            <p>Your apps stay private until you decide otherwise. When you're proud of something, share it with the world in one step.</p>
+            <h3>Remix <span class="text-orange">anything</span></h3>
+            <p>Open someone's app to get your own copy, then change it however you like, even translate it into your language.</p>
             <span class="live-timer"><i></i></span>
           </button>
         </li>
@@ -116,8 +116,8 @@ intro: true
         <div class="live-dots">
           <button type="button" class="live-dot" data-live-dot style="--node: var(--node-1)" aria-label="Step 1, Describe"></button>
           <button type="button" class="live-dot" data-live-dot style="--node: var(--node-2)" aria-label="Step 2, Build"></button>
-          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-3)" aria-label="Step 3, Remix"></button>
-          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-4)" aria-label="Step 4, Share"></button>
+          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-3)" aria-label="Step 3, Share"></button>
+          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-4)" aria-label="Step 4, Remix"></button>
         </div>
         <button type="button" class="live-arrow" data-live-next aria-label="Next step"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
       </div>
@@ -170,11 +170,11 @@ intro: true
             </div>
           </li>
           <li style="--f: var(--node-3)">
-            <div class="feature-viz" aria-hidden="true"><div class="fv-opts"><span>Tinker Click server</span><span>Your own server</span><span>Your own AI model</span></div></div>
+            <div class="feature-viz" aria-hidden="true"><div class="fv-opts"><span>Tinker Click server</span><span>Your own server</span><span>Sage.is AI-UI</span><span>Your own AI model</span></div></div>
             <div class="feature-copy">
               <span class="feature-num">03</span>
               <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/></svg></span>Your choice of server</h3>
-              <p>Use the official Tinker Click server, host your own, or bring your own AI model.</p>
+              <p>Use the official Tinker Click server, host your own, connect <a href="https://sage.is" target="_blank" rel="noopener">Sage.is AI-UI</a> for more privacy, or bring your own AI model.</p>
             </div>
           </li>
           <li style="--f: var(--node-4)">
@@ -208,7 +208,7 @@ intro: true
             <div class="feature-copy">
               <span class="feature-num">07</span>
               <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span>Open source</h3>
-              <p>Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
+              <p>Tinker Click is licensed under the AGPL. Run it yourself and help shape it.</p>
             </div>
           </li>
         </ul>
@@ -245,8 +245,8 @@ intro: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-1" class="faq-answer" hidden>
-          <p>Tinker Click is a desktop and iPad app for making your own apps by describing them: games, tools, documents, charts, dashboards, presentations and more.</p>
-          <p>It's like a code-sharing platform for people who don't write code. Keep what you make, remix apps other people have made, and share your own in the public gallery.</p>
+          <p>Tinker Click is an app for making your own apps by describing them: games, tools, documents, charts, dashboards, presentations and more.</p>
+          <p>It lets you make apps code-free. It's like having your own expert software developer in a box. It helps you build, share and remix your ideas.</p>
         </div>
       </div>
 
@@ -266,7 +266,7 @@ intro: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-8" class="faq-answer" hidden>
-          <p>Yes. Everything you make stays private until you choose to share it in the public gallery.</p>
+          <p>Yes. Everything you make stays private until you choose to share it in the public gallery or publish it directly to the web.</p>
         </div>
       </div>
 
@@ -276,7 +276,11 @@ intro: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-9" class="faq-answer" hidden>
-          <p>Yes. Tinker Click is developed in the open on GitHub. You can use the official Tinker Click server or run your own.</p>
+          <p>Yes. Tinker Click is licensed under the AGPL. You can use the official Tinker Click server or run your own.</p>
+          <p>The MIT licence is 170 words. It fits on a business card. It gives everything away.</p>
+          <p>The AGPL is about 5,500 words. Almost nobody reads it. So here it is in our 170 words for you to read, share, and use:</p>
+          {% include "component/licence-summary.html" %}
+          <p><a href="/licence/">The licence on its own page</a></p>
         </div>
       </div>
 
@@ -306,7 +310,7 @@ intro: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-6" class="faq-answer" hidden>
-          <p>Tinker Click is in private alpha with a small group of testers. Join the waitlist and we'll email you when it opens to more people.</p>
+          <p>Tinker Click is in early access. Join the waitlist to receive your invite codes, or ask a friend to share a spare invite code if they have one.</p>
         </div>
       </div>
     </div>

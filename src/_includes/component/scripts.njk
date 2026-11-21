@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     revealEls.forEach(el => el.classList.add('is-in'));
   }
 
-  // 5. Live Interface (Meet Tinker): Describe → Build → Remix → Share. The steps drive a small app
+  // 5. Live Interface (Meet Tinker): Describe → Build → Share → Remix. The steps drive a small app
   //    (index.html); its look for each step is in the CSS, keyed on .live's data-step, and this swaps
   //    its words, counts its numbers up and types the prompt. Coming down the page it waits on step 1
   //    while the orb's particles gather above the prompt (sphere.js), then plays through the steps on
@@ -202,11 +202,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // The timer line under each step's text, filled as the step plays
     const timers = steps.map((el) => el.querySelector('.live-timer i'));
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const PROMPT_TEXT = ['A cat-and-fish game', 'Building your app…', 'Translate it into German', ''];
+    const PROMPT_TEXT = ['A cat-and-fish game', 'Building your app…', '', 'Translate it into German'];
     const words = Array.from(stage.querySelectorAll('[data-t]')).map((el) => ({ el, list: el.dataset.t.split('|'), text: null }));
     const nums = Array.from(stage.querySelectorAll('[data-n]')).map((el) => ({ el, to: +el.dataset.n, at: +(el.dataset.at || 1), text: null }));
     // Numbers follow the app's language: 1,240 in English, 1.240 once it's in German
-    const fmt = (n, step) => n.toLocaleString(step >= 2 ? 'de-DE' : 'en-US');
+    const fmt = (n, step) => n.toLocaleString(step >= 3 ? 'de-DE' : 'en-US');
 
     // Swaps an element's text: the new words go in on top of the old, which leave and are removed.
     // j orders the words that change, for the Remix's roll
@@ -525,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
 
   if (waitlistForm && (urlParams.has('subscribed') || storage.get('tinker_subscribed'))) {
-    markDone(null, "You're on the list. We'll email you when Tinker Click opens to more people.");
+    markDone(null, "You're on the list. We'll email you your invite codes.");
     if (urlParams.has('subscribed')) history.replaceState(null, '', window.location.pathname);
   } else if (urlParams.has('error')) {
     sayStatus(urlParams.get('error') || 'Something went wrong. Please try again.', 'error');
@@ -554,10 +554,10 @@ document.addEventListener('DOMContentLoaded', () => {
           mode: 'cors'
         });
         const data = await response.json().catch(() => ({}));
-        markDone(emailVal, data.message || "You're on the list. We'll email you when Tinker Click opens to more people.");
+        markDone(emailVal, data.message || "You're on the list. We'll email you your invite codes.");
       } catch (err) {
         console.warn('Direct fetch handled gracefully:', err);
-        markDone(emailVal, "You're on the list. We'll email " + emailVal + ' when Tinker Click opens to more people.');
+        markDone(emailVal, "You're on the list. We'll email your invite codes to " + emailVal + '.');
       } finally {
         if (waitlistBtn) waitlistBtn.disabled = false;
       }

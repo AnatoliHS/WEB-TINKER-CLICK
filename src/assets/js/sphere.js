@@ -1,9 +1,9 @@
 // Thinking orb: a ring of slow, wavy light strands that grows from the hero slot into the stage,
-// then carries "Make it. Use it. Share it." as a lens:
+// then carries "Make it. Use it. Share it. Remix it." as a lens:
 //   - in the hero it's a flat ring of comets (concept A in /concepts/orb/); on the way to the
 //     stage the comets move out to just beyond the lens edge and keep circling there in a band
 //     (concept B, Orbit, in /concepts/orb-stage/), so nothing is ever drawn across the word
-//   - the three lines are set huge behind the orb and glide in one after another with the scroll
+//   - the four lines are set huge behind the orb and glide in one after another with the scroll
 //     (through a spring, so they ease rather than jump); the first slides in from the right as the
 //     orb lands. Inside the orb they're magnified and blue
 //   - the orb runs on its own clock: brisk in the hero, a slow drift once landed, and sped up by
@@ -12,8 +12,8 @@
 //   - further down, as the Meet Tinker demo comes up the screen, the particles fly back together
 //     into the hero halo above its prompt ([data-orb-dock]). Then, as the pinned demo steps through
 //     (concept in /concepts/orb-steps/), the halo builds the app: its strands run round the app
-//     window, header and tiles (Build), then round the blocks of text being translated (Remix),
-//     then fly in straight lines into the two other people's cards as small halos (Share). It
+//     window, header and tiles (Build), then fly in straight lines into the two other people's
+//     cards as small halos (Share), then round the blocks of text being translated (Remix). It
 //     takes each step's colour
 // Positions and progress come from assets/js/hero-stage.js, and for the demo from window.TinkerLive
 // (scripts.njk).
@@ -64,8 +64,8 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  const LINES = [['Make', ' it.'], ['Use', ' it.'], ['Share', ' it.']];
-  const LINES_END = 0.74; // the lines take the first 74% of the pinned scroll, the explosion the rest
+  const LINES = [['Make', ' it.'], ['Use', ' it.'], ['Share', ' it.'], ['Remix', ' it.']];
+  const LINES_END = 0.79; // the lines take the first 79% of the pinned scroll, the explosion the rest
   const HERO_SPEED = 1.4; // the orb's clock rate in the hero when nobody is scrolling
   const LANDED_SPEED = 0.45; // ...and once it has landed in the stage
 
@@ -230,7 +230,7 @@
     return { S: box(stage), dock: box(dock) };
   }
 
-  const LIVE_SPEED = [HERO_SPEED, 2.2, 1.6, HERO_SPEED];
+  const LIVE_SPEED = [HERO_SPEED, 2.2, HERO_SPEED, 1.6];
 
   // The halo only shows on the demo's first step. It gathers from the particles as the demo comes up
   // the screen, or over the step's start when the demo has come back round to it, and breaks back
@@ -261,11 +261,12 @@
   const burstReach = Array.from({ length: COUNT * DOTS }, (_, i) => 0.25 + rand(i, 3) * 0.5);
   const burstDelay = Array.from({ length: COUNT * DOTS }, (_, i) => rand(i, 7) * 0.3);
 
-  // Continuous line index 0 → 2: each line holds for the first 60% of its third, then moves on
+  // Continuous line index 0 → the last: each line holds for the first 60% of its share, then moves on
   function holdStep(q) {
-    const c = q * 3;
-    const s = Math.min(2, Math.floor(c));
-    return s < 2 ? s + easeInOut(clamp((c - s - 0.6) / 0.4)) : 2;
+    const last = LINES.length - 1;
+    const c = q * LINES.length;
+    const s = Math.min(last, Math.floor(c));
+    return s < last ? s + easeInOut(clamp((c - s - 0.6) / 0.4)) : last;
   }
 
   /* ----- Colours and canvas size ----- */
@@ -288,11 +289,12 @@
       steps: [1, 2, 3, 4].map((i) => toRgb(cs.getPropertyValue(`--node-${i}`))),
       bg: cs.getPropertyValue('--bg').trim() || '#eee9e2',
       accent: cs.getPropertyValue('--accent').trim() || '#2b4dff',
-      // The magnified lines: Make it blue, Use it the logo mark's orange (as .text-orange), Share it green
+      // The magnified lines: Make it blue, Use it the logo mark's orange (as .text-orange), Share it green, Remix it purple
       lens: [
         cs.getPropertyValue('--accent').trim() || '#2b4dff',
         '#ff5f00',
-        cs.getPropertyValue('--node-4').trim() || '#0f9f72'
+        cs.getPropertyValue('--node-4').trim() || '#0f9f72',
+        cs.getPropertyValue('--node-2').trim() || '#7a3cff'
       ],
       // Light strands on a dark page add up where they cross; dark ones on a light page can't
       dark: darkQuery.matches
@@ -335,10 +337,11 @@
       x += w + gap;
     });
     // Below 0 the first line is still sliding in from where the next ones come from
-    const k = Math.max(0, Math.min(Math.floor(rot), 2));
+    const last = LINES.length - 1;
+    const k = Math.max(0, Math.min(Math.floor(rot), last));
     const shift = rot < 0
       ? centres[0] + rot * (centres[1] - centres[0])
-      : lerp(centres[k], centres[Math.min(k + 1, 2)], rot - k);
+      : lerp(centres[k], centres[Math.min(k + 1, last)], rot - k);
     // color: one for every line, or a list with one per line
     const paint = (color) => {
       LINES.forEach((l, i) => {
