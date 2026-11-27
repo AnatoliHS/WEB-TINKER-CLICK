@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- The picture a link to tinker.click shows when it is shared (og:image), 1200 x 630.
+     Not published: design/render-social.cjs turns it into src/assets/social-card.png.
+     ?theme=light renders the light version. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Anton'; font-weight: 400; src: url('../src/assets/fonts/anton-latin.woff2') format('woff2'); }
+  @font-face { font-family: 'Geist'; font-weight: 100 900; src: url('../src/assets/fonts/geist-latin.woff2') format('woff2'); }
+
+  :root {
+    --bg: #0e0e0f; --ink: #eee9e2; --ink-2: #b3aea6; --muted: #77736c; --accent: #7590ff; --orange: #ff5f00;
+  }
+  .light {
+    --bg: #eee9e2; --ink: #121212; --ink-2: #4b4842; --muted: #8b867d; --accent: #2b4dff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 56px 64px 60px;
+    background: var(--bg); color: var(--ink);
+    font-family: 'Geist', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .mark { width: 60px; height: 60px; }
+  .pill {
+    padding: 14px 26px; border-radius: 999px;
+    background: var(--ink); color: var(--bg);
+    font-size: 24px; font-weight: 500; letter-spacing: -0.01em;
+  }
+  /* The hero's wordmark: TINKER, then CLICK at 0.4em in the accent colour, on one baseline */
+  .wordmark {
+    display: flex; align-items: baseline; gap: 0.06em;
+    font-family: 'Anton', sans-serif; font-weight: 400;
+    font-size: 300px; line-height: 0.84; letter-spacing: -0.012em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .wordmark .click { font-size: 0.4em; letter-spacing: 0.02em; color: var(--accent); }
+  .rule { height: 5px; margin-top: 22px; background: var(--ink); }
+  .bottom { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 30px; }
+  .title { font-size: 48px; font-weight: 500; line-height: 1.08; letter-spacing: -0.035em; }
+  .title .o { color: var(--orange); }
+  .url { font-size: 26px; font-weight: 500; color: var(--ink-2); letter-spacing: -0.01em; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <img class="mark" src="../src/assets/tinker-mark.svg" alt="">
+    <span class="pill">Join the waitlist</span>
+  </div>
+  <div>
+    <div class="wordmark"><span>Tinker</span><span class="click">Click</span></div>
+    <div class="rule"></div>
+    <div class="bottom">
+      <p class="title">Your next tool is<br><span class="o">one thought away.</span></p>
+      <p class="url">tinker.click</p>
+    </div>
+  </div>
+  <script>if (new URLSearchParams(location.search).get('theme') === 'light') document.documentElement.className = 'light';</script>
+</body>
+</html>

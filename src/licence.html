@@ -21,10 +21,11 @@ description: "Tinker Click's licence, the GNU Affero General Public License vers
 
     <div class="policy-card">
       <h2 id="authors">The Tinker Click Authors</h2>
-      <p>The copyright line names the people and companies who contribute to the official Tinker Click projects: the app, this site and its design. Each one adds their name in the same change as their first contribution.</p>
+      <p>All code is copyrighted to the people and companies who contribute to the official Tinker Click projects: the app, this site, and their design.</p>
+      {#- The names come from the AUTHORS file; a name with a site in _data/authorLinks.json links to it #}
       <ul>
         {%- for author in authors %}
-        <li>{{ author }}</li>
+        <li>{% if authorLinks[author] %}<a href="{{ authorLinks[author] }}" target="_blank" rel="noopener">{{ author }}</a>{% else %}{{ author }}{% endif %}</li>
         {%- endfor %}
       </ul>
     </div>

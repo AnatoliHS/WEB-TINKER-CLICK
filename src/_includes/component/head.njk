@@ -16,14 +16,21 @@
   <meta property="og:url" content="https://tinker.click{{ page.url }}" />
   <meta property="og:title" content="{{ title or 'Tinker Click — Make your own apps by describing them' }}" />
   <meta property="og:description" content="{{ description or 'Tinker Click turns what you describe into small apps you can play, remix and share. Join the waitlist for early access.' }}" />
-  <meta property="og:image" content="https://tinker.click/assets/tinker-wordmark-cream-400.png" />
+  <meta property="og:site_name" content="{{ site.name }}" />
+  <!-- The share picture: design/social-card.html, rendered by design/render-social.cjs -->
+  <meta property="og:image" content="{{ site.url }}{{ socialImage or site.socialImage }}" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="{{ socialImageAlt or site.socialImageAlt }}" />
 
   <!-- Twitter Card -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://tinker.click{{ page.url }}" />
-  <meta property="twitter:title" content="{{ title or 'Tinker Click — Make your own apps by describing them' }}" />
-  <meta property="twitter:description" content="{{ description or 'Tinker Click turns what you describe into small apps you can play, remix and share. Join the waitlist for early access.' }}" />
-  <meta property="twitter:image" content="https://tinker.click/assets/tinker-wordmark-cream-400.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://tinker.click{{ page.url }}" />
+  <meta name="twitter:title" content="{{ title or 'Tinker Click — Make your own apps by describing them' }}" />
+  <meta name="twitter:description" content="{{ description or 'Tinker Click turns what you describe into small apps you can play, remix and share. Join the waitlist for early access.' }}" />
+  <meta name="twitter:image" content="{{ site.url }}{{ socialImage or site.socialImage }}" />
+  <meta name="twitter:image:alt" content="{{ socialImageAlt or site.socialImageAlt }}" />
 
   <!-- Structured Data: SoftwareApplication -->
   <script type="application/ld+json">
@@ -37,12 +44,8 @@
   }
   </script>
 
-  <!-- Flag JS early so reveal animations never hide content without it -->
-  <script>document.documentElement.classList.add('js');</script>
-  {% if intro %}
-  <!-- Intro (component/intro.njk): plays on every load, except with reduced motion -->
-  <script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('has-intro');</script>
-  {% endif %}
+  <!-- Flags JS, and the intro when the layout asks for it (data-intro on <html>), before the page paints -->
+  <script src="/assets/js/early.js"></script>
 
   <!-- Fonts, served from the site: Anton (wordmark only), Geist (everything else). The Latin files load first -->
   <link rel="preload" href="/assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -51,6 +54,8 @@
 
   <!-- Core Stylesheet -->
   <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- Written by the build from every style="" attribute (src/_plugins/eleventy-plugin-csp.js) -->
+  <link rel="stylesheet" href="/assets/css/inline.css">
 
   <!-- Favicons -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">

@@ -5,6 +5,7 @@ const pluginBundle = require("@11ty/eleventy-plugin-bundle");
 const pluginNavigation = require("@11ty/eleventy-navigation");
 const { EleventyHtmlBasePlugin } = require("@11ty/eleventy");
 const sectionizePlugin = require("./src/_plugins/eleventy-plugin-sectionize");
+const cspPlugin = require("./src/_plugins/eleventy-plugin-csp");
 
 module.exports = function(eleventyConfig) {
   // Consolidate all assets into /assets/
@@ -25,6 +26,12 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
   eleventyConfig.addPlugin(sectionizePlugin);
+  // The output must fit tinker.click's Content-Security-Policy
+  eleventyConfig.addPlugin(cspPlugin);
+
+  // src/concepts/ holds design sketches. They are built only when asked for (CONCEPTS=1, as
+  // `npm start` does), so a plain build, the one that gets published, can never include them.
+  if (!process.env.CONCEPTS) eleventyConfig.ignores.add("src/concepts/**");
   eleventyConfig.addTemplateFormats("md");
   
   eleventyConfig.addLayoutAlias("default", "default.njk");

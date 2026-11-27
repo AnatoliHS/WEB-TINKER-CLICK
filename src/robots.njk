@@ -1,0 +1,12 @@
+---
+layout: false
+permalink: /robots.txt
+eleventyExcludeFromCollections: true
+---
+# tinker.click: search engines and AI assistants may read every page.
+# Kept out: the signup endpoint and published apps' shared data (bookings, answers).
+User-agent: *
+Disallow: /subscribe.php
+Disallow: /*/*/shared
+
+Sitemap: {{ site.url }}/sitemap.xml

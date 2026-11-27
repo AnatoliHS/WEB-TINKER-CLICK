@@ -2158,6 +2158,13 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   margin-top: 10px;
 }
 
+/* The summary's source, right under the quote */
+.licence-source {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
 /* The full AGPL on /licence/: the FSF's plain text, wrapped on narrow screens */
 .licence-full {
   margin-top: 16px;
@@ -2280,6 +2287,13 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 .footer-copy a,
 .footer-credit a {
   color: var(--ink-2);
+}
+
+/* The design credit, in small type under the copyright line */
+.footer-credit {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
 }
 
 @media (max-width: 760px) {
@@ -2418,6 +2432,64 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   border-radius: var(--radius);
   background: var(--bg-raised);
 }
+
+/* The long legal pages (/privacy/, /tos/): a long read, one rule between sections */
+.legal h2 {
+  margin: 48px 0 12px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 24px;
+}
+
+.legal h3 { margin: 24px 0 6px; font-size: 1rem; font-weight: 500; }
+
+.legal p,
+.legal li,
+.legal address { color: var(--ink-2); line-height: 1.7; }
+
+.legal p,
+.legal ul,
+.legal ol,
+.legal address { margin: 0 0 12px; }
+
+.legal address { font-style: normal; }
+.legal .policy-meta { margin: 16px 0 0; }
+.legal ul,
+.legal ol { padding-left: 20px; }
+.legal li { margin-bottom: 6px; }
+
+.legal strong,
+.legal th,
+.legal td:first-child { color: var(--ink); font-weight: 500; }
+
+.legal a { text-decoration: underline; text-underline-offset: 3px; }
+.legal a:hover { color: var(--accent); }
+
+.legal .summary { padding: 28px; border-radius: var(--radius); background: var(--bg-raised); }
+.legal .summary h2 { margin: 0 0 12px; padding: 0; border: 0; }
+.legal .summary ul { margin: 0; }
+
+.legal nav.toc { margin-top: 28px; }
+.legal nav.toc ol { columns: 2; column-gap: 32px; font-size: 0.9375rem; }
+.legal nav.toc li { break-inside: avoid; }
+.legal nav.toc a { text-decoration: none; }
+.legal nav.toc a:hover { text-decoration: underline; }
+
+@media (max-width: 560px) {
+  .legal nav.toc ol { columns: 1; }
+}
+
+/* Wide tables scroll inside their box, never the page */
+.legal .table { overflow-x: auto; margin: 0 0 16px; border-radius: 14px; background: var(--bg-raised); }
+.legal table { border-collapse: collapse; width: 100%; font-size: 0.9375rem; line-height: 1.5; }
+.legal th,
+.legal td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.legal tr:last-child td { border-bottom: 0; }
+.legal th { white-space: nowrap; }
+.legal td:first-child { min-width: 140px; }
 
 /* ==========================================================================
    REDUCED MOTION

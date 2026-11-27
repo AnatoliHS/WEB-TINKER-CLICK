@@ -1,0 +1,571 @@
+// The site's behaviour: the docking brand, the waitlist drawer and its form, the live steps.
+// A file, not an inline <script>: tinker.click's Content-Security-Policy runs scripts from files only.
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.documentElement;
+  const storage = {
+    get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+    set(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
+  };
+
+  // 1. Dynamic Brand: big in the hero at the top, docks into the corner as soon as scrolling starts
+  const heroAnchor = document.getElementById('hero-wordmark-anchor');
+  const dynamicBrand = document.getElementById('dynamic-brand');
+  const triggerBtn = document.getElementById('btn-waitlist-trigger');
+  const headerLogo = document.getElementById('header-logo');
+
+  const geo = { x: 0, y: 0, dockX: 24, dockY: 24, dockScale: 0.2 };
+  let isDocked = null;
+  let drawerOpen = false;
+
+  function measurePositions() {
+    if (!heroAnchor || !dynamicBrand) return;
+    const rect = heroAnchor.getBoundingClientRect();
+    const scrollY = window.scrollY || 0;
+    const fullHeight = rect.height || 120;
+
+    geo.x = rect.left;
+    geo.y = rect.top + scrollY;
+
+    // Dock vertically centred on the CTA, just right of the logo
+    const isMobile = window.innerWidth < 768;
+    let targetH = 32;
+    if (isMobile) targetH = 26;
+    else if (window.innerWidth >= 2560) targetH = 46;
+    else if (window.innerWidth >= 2000) targetH = 42;
+    else if (window.innerWidth >= 1600) targetH = 38;
+    geo.dockScale = targetH / fullHeight;
+    const cta = triggerBtn ? triggerBtn.getBoundingClientRect() : null;
+    const ctaCenter = cta ? cta.top + cta.height / 2 : 40;
+    const logo = headerLogo ? headerLogo.getBoundingClientRect() : null;
+    const gap = window.innerWidth >= 2000 ? 18 : window.innerWidth >= 1600 ? 16 : isMobile ? 10 : 14;
+    geo.dockX = logo ? logo.right + gap : 24;
+    geo.dockY = ctaCenter - (fullHeight * geo.dockScale) / 2;
+  }
+
+  function applyBrand(animate) {
+    if (!dynamicBrand) return;
+    const docked = (window.scrollY || 0) > 4 || drawerOpen;
+    if (docked === isDocked && animate) return;
+    isDocked = docked;
+
+    if (!animate) dynamicBrand.classList.add('no-transition');
+    dynamicBrand.style.transform = docked
+      ? `translate3d(${geo.dockX}px, ${geo.dockY}px, 0) scale(${geo.dockScale})`
+      : `translate3d(${geo.x}px, ${geo.y}px, 0) scale(1)`;
+    dynamicBrand.classList.toggle('is-docked', docked);
+    root.classList.toggle('brand-docked', docked);
+
+    if (!animate) {
+      void dynamicBrand.offsetWidth;
+      dynamicBrand.classList.remove('no-transition');
+    }
+  }
+
+  function remeasure() {
+    measurePositions();
+    applyBrand(false);
+  }
+
+  if (heroAnchor && dynamicBrand) {
+    remeasure();
+    // Letters rise once the intro (component/intro.njk) has finished, or straight away without it
+    const showBrand = () => dynamicBrand.classList.add('is-ready');
+    if (root.classList.contains('has-intro')) document.addEventListener('tinker:intro-done', showBrand, { once: true });
+    else showBrand();
+
+    window.addEventListener('scroll', () => applyBrand(true), { passive: true });
+    window.addEventListener('resize', remeasure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+
+    [dynamicBrand, headerLogo].forEach((link) => {
+      if (!link) return;
+      link.addEventListener('click', (e) => {
+        if (window.scrollY > 4) {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+  }
+
+  // 2. Waitlist Top-Down Drawer
+  const drawer = document.getElementById('waitlist-dropdown-drawer');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const emailInput = document.getElementById('email');
+
+  function openWaitlistDrawer() {
+    if (!drawer) return;
+    drawer.hidden = false;
+    drawerOpen = true;
+    applyBrand(true);
+    requestAnimationFrame(() => {
+      drawer.classList.add('is-open');
+      root.classList.add('drawer-open');
+    });
+    if (triggerBtn) triggerBtn.setAttribute('aria-expanded', 'true');
+    setTimeout(() => { if (emailInput) emailInput.focus({ preventScroll: true }); }, 350);
+  }
+
+  function closeWaitlistDrawer() {
+    if (!drawer || !drawerOpen) return;
+    drawer.classList.remove('is-open');
+    root.classList.remove('drawer-open');
+    drawerOpen = false;
+    if (triggerBtn) {
+      triggerBtn.setAttribute('aria-expanded', 'false');
+      triggerBtn.focus({ preventScroll: true });
+    }
+    setTimeout(() => {
+      if (!drawer.classList.contains('is-open')) drawer.hidden = true;
+      applyBrand(true);
+    }, 450);
+  }
+
+  if (drawer) {
+    if (triggerBtn) {
+      triggerBtn.addEventListener('click', () => {
+        drawerOpen ? closeWaitlistDrawer() : openWaitlistDrawer();
+      });
+    }
+    if (backdrop) backdrop.addEventListener('click', closeWaitlistDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeWaitlistDrawer();
+    });
+
+    document.querySelectorAll('[data-open-waitlist]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        openWaitlistDrawer();
+      });
+    });
+
+    if (window.location.hash === '#waitlist') openWaitlistDrawer();
+  }
+
+  // 3. FAQ Accordion
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const trigger = item.querySelector('.faq-question-btn');
+    const answer = item.querySelector('.faq-answer');
+    if (!trigger || !answer) return;
+
+    trigger.addEventListener('click', () => {
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+      faqItems.forEach(other => {
+        if (other === item) return;
+        const otherBtn = other.querySelector('.faq-question-btn');
+        const otherAns = other.querySelector('.faq-answer');
+        if (otherBtn && otherAns) {
+          otherBtn.setAttribute('aria-expanded', 'false');
+          otherAns.hidden = true;
+          other.classList.remove('open');
+        }
+      });
+
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+      answer.hidden = isOpen;
+      item.classList.toggle('open', !isOpen);
+    });
+  });
+
+  // 4. Scroll Reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    revealEls.forEach(el => {
+      const siblings = Array.from(el.parentElement.children).filter(c => c.classList.contains('reveal'));
+      el.style.transitionDelay = `${Math.min(siblings.indexOf(el), 4) * 70}ms`;
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-in'));
+  }
+
+  // 5. Live Interface (Meet Tinker): Describe → Build → Share → Remix. The steps drive a small app
+  //    (index.html); its look for each step is in the CSS, keyed on .live's data-step, and this swaps
+  //    its words, counts its numbers up and types the prompt. Coming down the page it waits on step 1
+  //    while the orb's particles gather above the prompt (sphere.js), then plays through the steps on
+  //    its own; scrolled back up out of view, it resets, so arriving always starts with the gathering.
+  const live = document.querySelector('[data-live]');
+  if (live) {
+    const stage = live.querySelector('.live-stage');
+    const steps = Array.from(live.querySelectorAll('[data-live-step]'));
+    const counter = live.querySelector('[data-live-counter]');
+    const dots = Array.from(live.querySelectorAll('[data-live-dot]'));
+    const typed = stage.querySelector('[data-ui="promptText"]');
+    // The timer line under each step's text, filled as the step plays
+    const timers = steps.map((el) => el.querySelector('.live-timer i'));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const PROMPT_TEXT = ['A cat-and-fish game', 'Building your app…', '', 'Translate it into German'];
+    const words = Array.from(stage.querySelectorAll('[data-t]')).map((el) => ({ el, list: el.dataset.t.split('|'), text: null }));
+    const nums = Array.from(stage.querySelectorAll('[data-n]')).map((el) => ({ el, to: +el.dataset.n, at: +(el.dataset.at || 1), text: null }));
+    // Numbers follow the app's language: 1,240 in English, 1.240 once it's in German
+    const fmt = (n, step) => n.toLocaleString(step >= 3 ? 'de-DE' : 'en-US');
+
+    // Swaps an element's text: the new words go in on top of the old, which leave and are removed.
+    // j orders the words that change, for the Remix's roll
+    function swap(w, text, j, animate) {
+      if (w.text === text) return false;
+      w.text = text;
+      w.el.classList.toggle('is-empty', !text);
+      Array.from(w.el.children).forEach((old) => {
+        if (!animate) return old.remove();
+        if (old.classList.contains('is-out')) return;
+        old.classList.add('is-out');
+        old.style.setProperty('--j', j);
+        setTimeout(() => old.remove(), 1400);
+      });
+      const span = document.createElement('span');
+      span.className = animate ? 'ui-w is-in' : 'ui-w';
+      span.style.setProperty('--j', j);
+      span.textContent = text;
+      // Once in, it's plain text again, so a later step's entrance rules can't replay on it
+      if (animate) span.addEventListener('animationend', () => span.classList.remove('is-in'), { once: true });
+      w.el.append(span);
+      return true;
+    }
+
+    const setNum = (n, text) => {
+      n.text = text;
+      if (n.el.lastChild) n.el.lastChild.textContent = text;
+    };
+
+    function layout(step, prev, animate) {
+      live.dataset.step = step;
+      // Restart the step's keyframe animations
+      live.classList.remove('go');
+      void live.offsetWidth;
+      if (animate) live.classList.add('go');
+      let j = 0;
+      words.forEach((w) => { if (swap(w, w.list[step] || '', j, animate)) j++; });
+      nums.forEach((n) => {
+        if (n.counting) { n.counting = false; setNum(n, fmt(n.to, prev)); }
+        if (step < n.at) return swap(n, '', j, animate);
+        if (!n.text) {
+          // Arriving: count up from 0
+          swap(n, fmt(0, step), j++, animate);
+          n.t0 = performance.now() + 350;
+          n.counting = animate && !reduced;
+          if (!n.counting) setNum(n, fmt(n.to, step));
+        } else if (swap(n, fmt(n.to, step), j, animate)) j++;
+      });
+      typed.textContent = '';
+      counter.textContent = `0${step + 1} / 0${steps.length}`;
+      [steps, dots].forEach((list) => list.forEach((el, i) => (i === step ? el.setAttribute('aria-current', 'step') : el.removeAttribute('aria-current'))));
+    }
+
+    // Shared with the orb (sphere.js) on window.TinkerLive: the step (0–3), how far through it (0–1),
+    // gather (0 → 1 as the halo's spot above the prompt comes up the screen), looped (back on step 1
+    // from another step, so the halo gathers again over the step's start) and leaving (just come
+    // from step 1, so the halo breaks up)
+    const STEP_MS = 4500;
+    const dock = stage.querySelector('[data-orb-dock]');
+    const pinned = document.querySelector('[data-stage]');
+    const state = { step: 0, local: 0, gather: 0, looped: false, leaving: false };
+    window.TinkerLive = { state, stage };
+    const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+    let current = 0, stepStart = 0, frame = 0;
+
+    function go(step, animate = true) {
+      const next = (step + steps.length) % steps.length;
+      const prev = current;
+      state.looped = next === 0 && current !== 0;
+      state.leaving = current === 0 && next !== 0;
+      current = next;
+      stepStart = performance.now();
+      layout(current, prev, animate);
+    }
+
+    function tick(now) {
+      frame = requestAnimationFrame(tick);
+      const d = dock.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const dockY = d.top + d.height / 2;
+      // The particles start gathering just as the stage above unpins (its orb's explosion has just
+      // finished there): where the halo's spot sits on screen at that moment, and take until it's
+      // 60% of the way up the screen, so they're in view the whole way in
+      const start = pinned ? Math.max(dockY - (pinned.getBoundingClientRect().bottom - vh) + vh * 0.05, vh * 1.05) : vh * 1.35;
+      state.gather = clamp01((start - dockY) / (start - vh * 0.6));
+      // Hold on step 1 until the halo has gathered, then play on through the steps
+      if (state.gather < 1 && current === 0 && !state.looped) stepStart = now;
+      state.local = clamp01((now - stepStart) / STEP_MS);
+      if (state.local >= 1) go(current + 1);
+      state.step = current;
+      timers.forEach((el, i) => { el.style.transform = `scaleX(${i === current ? state.local : 0})`; });
+      // The prompt types out over the start of each step
+      const text = PROMPT_TEXT[current];
+      typed.textContent = text.slice(0, Math.round(text.length * (reduced ? 1 : clamp01((state.local - 0.1) / 0.3))));
+      nums.forEach((n) => {
+        if (!n.counting) return;
+        const k = clamp01((now - n.t0) / 1300);
+        setNum(n, fmt(Math.round(n.to * (1 - Math.pow(1 - k, 3))), current));
+        if (k >= 1) n.counting = false;
+      });
+    }
+
+    steps.forEach((el, i) => el.addEventListener('click', () => go(i)));
+    // Tapping the animation moves on to the next step (handy on phones, where only one step shows)
+    stage.addEventListener('click', () => go(current + 1));
+    dots.forEach((el, i) => el.addEventListener('click', () => go(i)));
+    live.querySelector('[data-live-prev]').addEventListener('click', () => go(current - 1));
+    live.querySelector('[data-live-next]').addEventListener('click', () => go(current + 1));
+    go(0, false);
+
+    if ('IntersectionObserver' in window) {
+      let pausedAt = performance.now();
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) {
+          // Carry on from where it paused
+          stepStart += performance.now() - pausedAt;
+          frame = requestAnimationFrame(tick);
+          return;
+        }
+        cancelAnimationFrame(frame);
+        pausedAt = performance.now();
+        // Gone off the bottom (scrolled back up): start over, so arriving again begins with the gathering
+        if (e.boundingClientRect.top > 0) {
+          state.gather = 0;
+          current = 0;
+          go(0, false);
+        }
+      // Running from well below the screen, as the halo starts gathering before the demo is on it
+      }, { rootMargin: '0px 0px 300% 0px' }).observe(live);
+    }
+  }
+
+  // 6. Features ticker: the scroll slides the two rows, the first left and the second right, by how far
+  //    they've come up the screen, so scrolling back up runs them back
+  const ticker = document.querySelector('[data-ticker]');
+  if (ticker) {
+    const [first, second] = ticker.querySelectorAll('.ticker-row');
+    const SPEED = 0.45; // px sideways per px scrolled
+    let ticking = false;
+    const slide = () => {
+      ticking = false;
+      const b = ticker.getBoundingClientRect();
+      if (b.bottom < -200 || b.top > window.innerHeight + 200) return;
+      // 0 with the rows in the middle of the screen, where each row's first phrase sits fully in view
+      const d = (window.innerHeight / 2 - (b.top + b.height / 2)) * SPEED;
+      // Each row is its phrases four times over: start a pass (the first) or two in, so there's always
+      // more row on either side whichever way it's sliding
+      first.style.transform = `translateX(${-d - first.scrollWidth / 4}px)`;
+      second.style.transform = `translateX(${d - second.scrollWidth / 2}px)`;
+    };
+    const request = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(slide);
+    };
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    slide();
+  }
+
+  // 6b. Features: on wider screens a rail of cards that pins (.is-scrub) while the page's scroll slides
+  //     it sideways, a pixel across for each pixel down, with a clean solid progress line
+  //     under it to show how far through it is. The words in the cards' examples
+  //     (data-cycle) roll over in turn while on screen
+  const features = document.querySelector('[data-features]');
+  if (features) {
+    const track = features.querySelector('[data-features-track]');
+    const pinBox = features.querySelector('[data-features-pin]');
+    const line = features.querySelector('[data-features-line]');
+    const bar = features.querySelector('[data-features-bar]');
+    // The platforms row after the rail, and a marker for where it belongs when it isn't pinned with it
+    const platforms = document.querySelector('[data-platforms]');
+    const home = document.createComment('platforms');
+    if (platforms) platforms.before(home);
+    const wide = window.matchMedia('(min-width: 761px)');
+    const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+    // Shared with the orb (sphere.js) on window.TinkerFeatures: on (pinned and scrubbed), progress
+    // (0 → 1 across the cards), gather (0 → 1 over the 90% of a screen before the rail pins, the
+    // particles gathering at the line's start, done just as the cards start to move), past (how far, in px, the page has
+    // scrolled on since the last card came in and the rail unpinned: the line's tail runs up to its
+    // tip and the strands burst apart there), the line itself and how many cards
+    const state = { on: false, progress: 0, gather: 0, past: 0 };
+    window.TinkerFeatures = { state, line, cards: track.children.length };
+    let max = 0, pinTop = 0;
+
+    const update = () => {
+      if (state.on) {
+        // How far the page has scrolled since the rail pinned (less than 0 before it does)
+        const travelled = pinTop - features.getBoundingClientRect().top;
+        const run = window.innerHeight * 0.9;
+        state.gather = clamp01((travelled + run) / run);
+        state.progress = max > 0 ? clamp01(travelled / max) : 1;
+        state.past = Math.max(0, travelled - max);
+        track.scrollLeft = state.progress * max;
+      } else {
+        const m = track.scrollWidth - track.clientWidth;
+        state.progress = m > 0 ? track.scrollLeft / m : 1;
+        state.gather = 0;
+        state.past = 0;
+      }
+      bar.style.width = `${state.progress * 100}%`;
+    };
+    // The section is made as tall as the rail plus the distance it slides, so it unpins as the last
+    // card comes in, and the rail pins in the middle of the screen. On screens tall enough to hold
+    // both (iPads upright, tall desktops), the platforms row pins under it too, so the screen isn't
+    // left empty below the line while the cards go by
+    const measure = () => {
+      state.on = wide.matches;
+      features.classList.toggle('is-scrub', state.on);
+      // Room on screen below the fixed header, with a little space at either end
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      const room = window.innerHeight - header - 32;
+      if (platforms) {
+        if (state.on) pinBox.append(platforms);
+        if (!state.on || pinBox.offsetHeight > room) home.after(platforms);
+        features.classList.toggle('has-platforms', platforms.parentNode === pinBox);
+      }
+      max = state.on ? Math.max(0, track.scrollWidth - track.clientWidth) : 0;
+      // Centred, but kept clear of the header when the rail and platforms together only just fit
+      const centred = (window.innerHeight - pinBox.offsetHeight) / 2;
+      pinTop = state.on ? Math.max(features.classList.contains('has-platforms') ? header + 16 : 0, centred) : 0;
+      pinBox.style.top = state.on ? `${pinTop}px` : '';
+      features.style.height = state.on ? `${pinBox.offsetHeight + max}px` : '';
+      update();
+    };
+    let ticking = false;
+    const request = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; update(); });
+    };
+    window.addEventListener('scroll', request, { passive: true });
+    track.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    wide.addEventListener('change', measure);
+    // A sideways swipe on a trackpad scrolls the page, so it moves the rail too
+    track.addEventListener('wheel', (e) => {
+      if (!state.on || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      window.scrollBy(0, e.deltaX);
+    }, { passive: false });
+    measure();
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Phones: the row nearest the middle of the screen snaps into focus (is-focus); the rest sit back,
+    // smaller and faded (style.css). .is-focusing turns the effect on, so without the script all show
+    const phone = window.matchMedia('(max-width: 760px)');
+    const rows = Array.from(track.children);
+    let focusTicking = false;
+    const focus = () => {
+      focusTicking = false;
+      const on = phone.matches && !reduced;
+      track.classList.toggle('is-focusing', on);
+      if (!on) return;
+      const mid = window.innerHeight / 2;
+      let best = null, dist = Infinity;
+      rows.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.top + r.height / 2 - mid);
+        if (d < dist) { dist = d; best = el; }
+      });
+      rows.forEach((el) => el.classList.toggle('is-focus', el === best));
+    };
+    const requestFocus = () => {
+      if (focusTicking) return;
+      focusTicking = true;
+      requestAnimationFrame(focus);
+    };
+    window.addEventListener('scroll', requestFocus, { passive: true });
+    window.addEventListener('resize', requestFocus);
+    phone.addEventListener('change', requestFocus);
+    focus();
+
+    features.querySelectorAll('[data-cycle]').forEach((el) => {
+      const words = el.dataset.cycle.split('|');
+      let i = 0, timer = 0;
+      const show = (animate) => {
+        Array.from(el.children).forEach((old) => {
+          if (!animate) return old.remove();
+          old.className = 'fv-w is-out';
+          setTimeout(() => old.remove(), 450);
+        });
+        const span = document.createElement('span');
+        span.className = animate ? 'fv-w is-in' : 'fv-w';
+        span.textContent = words[i];
+        el.append(span);
+      };
+      show(false);
+      if (reduced || !('IntersectionObserver' in window)) return;
+      new IntersectionObserver(([e]) => {
+        clearInterval(timer);
+        if (e.isIntersecting) timer = setInterval(() => { i = (i + 1) % words.length; show(true); }, 1800);
+      }).observe(el);
+    });
+  }
+
+  // 7. Waitlist Form Processing & Progressive Enhancement
+  const waitlistForm = document.getElementById('signup');
+  const waitlistStatus = document.getElementById('status');
+  const waitlistBtn = waitlistForm ? waitlistForm.querySelector('button[type="submit"]') : null;
+
+  const sayStatus = (msg, type = '') => {
+    if (!waitlistStatus) return;
+    waitlistStatus.textContent = msg;
+    waitlistStatus.className = 'status' + (type ? ' ' + type : '');
+  };
+
+  const markDone = (email, msg) => {
+    waitlistForm.classList.add('done');
+    if (email) storage.set('tinker_subscribed', email);
+    sayStatus(msg, 'ok');
+  };
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (waitlistForm && (urlParams.has('subscribed') || storage.get('tinker_subscribed'))) {
+    markDone(null, "You're on the list. We'll email you your invite codes.");
+    if (urlParams.has('subscribed')) history.replaceState(null, '', window.location.pathname);
+  } else if (urlParams.has('error')) {
+    sayStatus(urlParams.get('error') || 'Something went wrong. Please try again.', 'error');
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  if (waitlistForm) {
+    waitlistForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const emailVal = emailInput.value.trim();
+      if (!emailVal || !emailInput.checkValidity()) {
+        sayStatus('Please enter a valid email address.', 'error');
+        emailInput.focus();
+        return;
+      }
+
+      if (waitlistBtn) waitlistBtn.disabled = true;
+      sayStatus('Saving your spot…');
+
+      // Only the server's own "ok" counts. A refused, failed or unanswered request says so:
+      // telling someone they are on the list when they are not loses the signup for good.
+      try {
+        const response = await fetch(waitlistForm.action, {
+          method: 'POST',
+          body: new FormData(waitlistForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.ok) {
+          markDone(emailVal, data.message || "You're on the list. We'll email you your invite codes.");
+        } else {
+          sayStatus(data.message || 'Something went wrong. Please try again.', 'error');
+        }
+      } catch (err) {
+        sayStatus('Network error. Please try again.', 'error');
+      } finally {
+        if (waitlistBtn) waitlistBtn.disabled = false;
+      }
+    });
+  }
+});

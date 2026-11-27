@@ -1,0 +1,18 @@
+---
+layout: false
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The site's own pages, listed by the build: every page that is not marked noindex, then the
+     pages the server makes itself (serverPages in src/_data/site.json). Published apps are not listed. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for item in collections.all | sort(false, false, "url") %}
+{%- if not item.data.noindex %}
+  <url><loc>{{ site.url }}{{ item.url }}</loc></url>
+{%- endif %}
+{%- endfor %}
+{%- for url in site.serverPages %}
+  <url><loc>{{ site.url }}{{ url }}</loc></url>
+{%- endfor %}
+</urlset>

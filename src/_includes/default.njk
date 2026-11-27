@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"{% if intro %} data-intro{% endif %}>
   {% include "component/head.njk" %}
   <body class="tinker-app">
     {% if intro %}{% include "component/intro.njk" %}{% endif %}

@@ -4,5 +4,10 @@
   "description": "Tell Tinker Click what you need and get a focused app built for the job. Discover, remix and share apps. Join the waitlist for early access.",
   "url": "https://tinker.click",
   "waitlistUrl": "https://tinker.click/",
-  "subscribeEndpoint": "https://tinker.click/subscribe.php"
+  "subscribeEndpoint": "/subscribe.php",
+  "serverPages": [
+    "/downloads/"
+  ],
+  "socialImage": "/assets/social-card.png",
+  "socialImageAlt": "Tinker Click. Your next tool is one thought away."
 }
